@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Post from "./components/Post";
 import { db, auth } from "./lib/firebase";
-import { Button, Dialog, Modal, DialogContent } from "@mui/material";
+import { Button, Dialog, Modal, DialogContent, Avatar } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import ImgUpload from "./components/ImgUpload";
 import Loader from "./components/Loader";
@@ -11,6 +11,7 @@ import logo from "./assets/logo.png";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import LoginScreen from "./pages/Login";
 import SignupScreen from "./pages/Signup";
+import UserProfile from "./pages/Profile";
 import AnimatedButton from "./components/AnimatedButton";
 import NotFoundPage from "./components/NotFound";
 import ShareModal from "./components/ShareModal";
@@ -192,16 +193,46 @@ function App() {
             >
               New Post
             </Button>
-            <Button
-              onClick={() => {
-                setLogout(true);
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
               }}
-              color="secondary"
-              variant="contained"
-              sx={{ ...buttonStyle, marginRight: "10px" }}
             >
-              Logout
-            </Button>
+              <Avatar
+                className="post__avatar"
+                alt={"username"}
+                src={user.photoURL}
+                onClick={() => {
+                  navigate(`/dummygram/${user.displayName}`);
+                }}
+                sx={{
+                  bgcolor: "royalblue",
+                  border: "1px solid transparent",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  cursor: "pointer",
+                  scale: "1.25",
+                  marginRight: "1.4rem",
+                  "&:hover": {
+                    boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 17px 0px",
+                    border: "2px solid pink",
+                    // scale: "1.3",
+                  },
+                }}
+              />
+              <Button
+                onClick={() => {
+                  setLogout(true);
+                }}
+                color="secondary"
+                variant="contained"
+                sx={{ ...buttonStyle, marginRight: "10px" }}
+              >
+                Logout
+              </Button>
+            </div>
           </>
         ) : (
           <div className="login__container">
@@ -216,7 +247,6 @@ function App() {
             >
               Sign In
             </Button>
-
             <Button
               onClick={() => {
                 navigate("/dummygram/signup");
@@ -375,6 +405,11 @@ function App() {
               <></>
             )
           }
+        />
+
+        <Route
+          path="/dummygram/:displayName"
+          element={<UserProfile user={user} />}
         />
 
         <Route path="/dummygram/login" element={<LoginScreen />} />
